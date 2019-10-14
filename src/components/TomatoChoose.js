@@ -58,39 +58,43 @@ const TomatoChoose = () => {
     setSuccess(false);
   };
 
+  const predictAll = files => {
+    let formData = new FormData();
+    files.forEach(file => formData.append('image', file));
+    axios
+      .post('http://45.137.148.253:8000/api/tomato_predict_all/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(response => {
+        setLoading(false);
+        setSuccess(true);
+        setOpen(false);
+        let imgs = [];
+        files.forEach(file => {
+          let fr = new FileReader();
+          fr.onload = () => {
+            imgs.push({
+              src: fr.result,
+              opacity: 1
+            });
+            if (imgs.length === response.data.length) {
+              setImages(imgs);
+            }
+          };
+          fr.readAsDataURL(file);
+        });
+        setPredictions(response.data);
+      });
+  };
+
   const handleModalClosePrediction = () => {
     if (files) {
       setLoading(true);
       setImages([]);
       setImageFilters([]);
-      let formData = new FormData();
-      files.forEach(file => formData.append('image', file));
-      axios
-        .post('http://45.137.148.253:8000/api/tomato_predict_all/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        .then(response => {
-          setLoading(false);
-          setSuccess(true);
-          setOpen(false);
-          let imgs = [];
-          files.forEach(file => {
-            let fr = new FileReader();
-            fr.onload = () => {
-              imgs.push({
-                src: fr.result,
-                opacity: 1
-              });
-              if (imgs.length === response.data.length) {
-                setImages(imgs);
-              }
-            };
-            fr.readAsDataURL(file);
-          });
-          setPredictions(response.data);
-        });
+      predictAll(files);
     }
   };
 
