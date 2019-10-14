@@ -1,0 +1,18 @@
+.MuiGrid-grid-xs-4 {
+    flex-grow: 0!important;
+    max-width: 8.333333%!important;
+    flex-basis: 8.333333%!important;
+}
+
+.dropzone-area-wrapper>div {
+    overflow: auto!important
+}
+
+.dropzone-area-wrapper {
+    overflow: auto!important;
+    max-height: 90vh!important;
+}
+
+.left-images-shown {
+    transition: all 0.5s;
+}
